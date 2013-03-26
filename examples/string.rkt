@@ -24,6 +24,7 @@
                     #:literals (set!)
                     [(set! w e)   (syntax/loc so (set! v* i e))]
                     [(w k)        (syntax/loc so (string-ref v* k))]
+                    [(w k l)      (syntax/loc so (substring v* k l))]
                     [(w . more)   (syntax/loc so (#%app v* . more))]
                     [i:identifier (syntax/loc so v*)])]
               #`[v! (make-transformer

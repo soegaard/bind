@@ -177,6 +177,8 @@ In the body of the bind expression:
 
 @racket[(v i)]     expands to @racket[(vector-ref v i)]
 
+@racket[(v i j)]   expands to @racket[(vector-copy v i j)]
+
 @racket[(v! i x)]  expands to @racket[(vector-set! v i x)]
 
 @racket[v!]       expands to  @racket[(λ (i x) (vector-set! v i x))]
@@ -186,6 +188,29 @@ In the body of the bind expression:
                  (bind ([v :vector (vector 3 4)])
                        (v! 1 5)
                        (+ (v 0) (v 1)))]
+
+@;--------------------
+
+@defform[#:kind "bct" #:id :string
+                [id :string e]]
+
+The binding clause
+@racketblock[[id :string e]]
+will evaluate the expression @racket[_e] and bind the result to @racket[id].
+In the body of the bind expression:
+
+@racket[(id i)]     expands to @racket[(string-ref id i)]
+
+@racket[(id i j)]   expands to @racket[(substring id i j)]
+
+@racket[(id! i x)]  expands to @racket[(string-set! id i x)]
+
+@racket[id!]       expands to  @racket[(λ (i x) (string-set! id i x))]
+
+@examples[#:eval beval
+                 (bind ([s :string "foobar"])
+                   (~a (s 3 6) (s 0) (s 1) (s 2)))]
+
 
 @;--------------------
 

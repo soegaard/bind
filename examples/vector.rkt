@@ -10,7 +10,7 @@
 ;   will evaluate the expression e and bind the result to v.
 ;   In the body of the bind expression:
 ;       (v i)     expands to (vector-ref v i)
-;       (v i j)   expands to (subvector v i j)
+;       (v i j)   expands to (vector-copy v i j)
 ;       (v! i x)  expands to (vector-set! v i x)
 ;        v!       expands to (λ (i x) (vector-set! v i x))
 
