@@ -4,10 +4,10 @@
           (for-syntax racket/base racket/path)
           (for-label scribble/base)
           "../bind.rkt"
-          (for-label racket "../bind.rkt"))
-@(require scribble/eval (for-label racket "../bind.rkt"))
+          (for-label racket bind))
+@(require scribble/eval (for-label racket bind))
 @(define beval (make-base-eval))
-@(beval '(require racket "../bind.rkt"))
+@(beval '(require racket bind))
 
 @local-table-of-contents[#:style 'immediate-only]
 
