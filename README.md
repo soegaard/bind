@@ -1,3 +1,6 @@
+Link to: [Scribble documentation](http://htmlpreview.github.com/?https://github.com/soegaard/bind/blob/master/scribblings/bind.html) 
+
+
 Bind: One construct to bind them all
 
     1 Bind: A Local binding construct
