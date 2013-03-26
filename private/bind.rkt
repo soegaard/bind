@@ -1,5 +1,5 @@
 #lang racket
-(provide #%bind-clause bind
+(provide #%bind-clause bind def
          define-binding-clause-transformer
          (struct-out binding-clause-transformer)
          (for-syntax make-transformer))
@@ -22,9 +22,10 @@
       [(id-or-ids bct e:expr ...+) (transform-clause #'bct)]
       [(id:id expr:expr)           (transform-clause #'#%bind-clause)]
       [((id:id ...) expr:expr)     (transform-clause #'#%bind-clause)]
-      [_ (define msg (~a "bad syntax one [id maybe-bct expr], "
-                         "[(id ...) maybe-bct expr] expected, got: "
-                         clause-stx))
+      [_ (displayln clause-stx)
+       (define msg (~a "bad syntax one [id maybe-bct expr], "
+                       "[(id ...) maybe-bct expr] expected, got: "
+                       clause-stx))
          (error 'expand-clause msg)]))
   
   (define (expand-clauses clauses-stx)
@@ -47,3 +48,28 @@
        (let-values #,cs
          (let-syntax #,stx-cs
            body ...)))]))
+
+(define-syntax (def stx)
+  (syntax-parse stx
+    [(_ name:id e:expr)
+     (syntax/loc stx
+       (define name expr))]
+    [(_ (name:id ...) e:expr)
+     (syntax/loc stx
+       (define-values (name ...) expr))]
+    [(_ name:id bct:id . more)
+     (define-values (cs stx-cs) (expand-clauses #'([name bct . more])))
+     (with-syntax ([((id e) ...) cs]
+                   [((stx-id stx-e) ...) stx-cs])
+     (syntax/loc stx
+       (begin
+         (define-values id e) ...
+         (define-syntax stx-id stx-e) ...)))]
+    [(_ (name:id ...) bct:id . more)
+     (define-values (cs stx-cs) (expand-clauses #'([(name ...) bct . more])))
+     (with-syntax ([((id e) ...) cs]
+                   [((stx-id stx-e) ...) stx-cs])
+     (syntax/loc stx
+       (begin
+         (define-values id e) ...
+         (define-syntax stx-id stx-e) ...)))]))

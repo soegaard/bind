@@ -24,14 +24,14 @@
   (syntax-parse stx
     [(id:id _ expr)
      (values
-      (list #`[(id) #,(syntax/loc stx (delay expr))])
+      (list #`[(id1) #,(syntax/loc stx (delay expr))])
       (list 
        #`[id (make-transformer
               #:context so
               #:literals (set!)
-              [(set! i e)   (syntax/loc so (set! id e))]
-              [(i . more)   (syntax/loc so (#%app (force id) . more))]
-              [i:identifier (syntax/loc so (force id))])]))]))
+              [(set! i e)   (syntax/loc so (set! id1 e))]
+              [(i . more)   (syntax/loc so (#%app (force id1) . more))]
+              [i:identifier (syntax/loc so (force id1))])]))]))
 
 (module* test #f 
   (require rackunit)
