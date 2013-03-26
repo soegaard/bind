@@ -124,6 +124,33 @@ This manual describes the builtin binding clause transformer, but
 see @racket[define-binding-clause-transformer] on how to define
 your own.
 
+@defform*[((def id e)
+           (def (id ...) e)
+           (def id bct e ...+)
+           (def (id ...) bct e ...+))]
+
+Note: @racket[def] is not meant to work as a dropin for @racket[define].
+
+In the simple cases @racket[(def id e)] the expression @racket[e]
+is evaluated and the result is bound to @racket[_id].
+
+In the case @racket[(def (id ...) e)] the expression @racket[e]
+is evaluated. It must return the same number of values as there
+are identifiers @racket[id ...]. Each value is bound to an identifier.
+
+In the general case @racket[(def id bct e ...)] the binding clause
+transformer @racket[_bct] is called with the binding clause 
+@racket[[id bct e ...]] as input. The resulting @racket[let-values]
+clauses and @racket[let-syntax] clauses are spliced into
+a @racket[define-values] and @racket[define-syntax] definitions.
+@racketblock[(define-values (id ...) e) ...
+             (define-syntax (id ...) e) ...]
+
+@examples[#:eval beval
+                 (def v :vector #(3 4))
+                 (v 0)]
+
+
 @subsection{Binding Clause Transformers}
 
 @defform[#:kind "bct" #:id :delay
