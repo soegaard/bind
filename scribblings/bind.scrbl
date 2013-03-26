@@ -143,6 +143,30 @@ Applictions @racket[(id arg ...)] expand to @racket[((force id) arg ...)].
 
 @;--------------------
 
+@defform[#:kind "bct" #:id :object
+                [id :object e]]
+
+The binding clause transformer @racket[:object] 
+binds @racket[_id] to the result of the expression @racket[(delay e)].
+In the body of @racket[bind] applications of the form 
+@racketblock[(id arg ...)]
+will expand to
+@racketblock[(send id arg ...)]
+
+@examples[#:eval beval
+(define fish%
+  (class object% (init size)                
+    (super-new)
+    (define current-size size)
+    (define/public (get-size) current-size)    
+    (define/public (grow amt) (set! current-size (+ amt current-size)))))
+; Now :object allows to use objects with an implicit send
+(bind ([charlie :object (new fish% [size 10])])
+  (charlie grow 5)
+  (charlie get-size))]
+
+@;--------------------
+
 @defform[#:kind "bct" #:id :vector
                 [id :vector e]]
 
@@ -181,6 +205,8 @@ result value to the identifiers #racket[_id ...].
 @defform[#:kind "bct" #:id :match
                 [(id ...) :match pat e]]
 
+@;--------------------
+
 The binding clause
 @racketblock[[id :match pat e]]
 will match the pattern @racket[pat] against the result 
@@ -196,6 +222,8 @@ All identifiers @racket[id ...] must appear in the pattern.
                  (bind ([x :match (list x _) '(2 3)]) x)
                  (bind ([(x y) :match (list x y) '(2 3)]) (+ x y))]
 
+@;--------------------
+
 
 @defform[#:kind "bct" #:id :complex
                 [(x y) :complex e]]
@@ -209,6 +237,7 @@ bind expression.
 @examples[#:eval beval
                  (bind ([(x y) :complex (sqrt -4)]) (list x y))]
 
+@;--------------------
 
 
 @defform[#:kind "bct" #:id :vector/idx
