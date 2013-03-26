@@ -38,14 +38,12 @@ clause represented as a syntax object and returns two values: a list of
 `let-values` binding clauses and a list of `let-syntax` binding clauses.
 The bindings for all clauses are then spliced into the following:
 
-```racket
-```racket                  
+```racket                
 (let-values ([(id ...) e]  
               ...)         
   (let-syntax ([(id ...) e]
                ...)        
-    body ...))             
-```                        
+    body ...))                    
 ```
 
 Example:
@@ -54,11 +52,11 @@ Euclid is writting a library for plane geometry and given a vector `v`
 want to use `v0` and `v1` to refer to the entries of the vector. His
 solution is to define a binding clause transformer `vec2`.
 
-```racket
+
 Examples:                                                    
 ```racket                                                    
 > (require (for-syntax syntax/parse racket/syntax))          
-                                                             
+```                                     
 ```racket                                                    
 > (define-binding-clause-transformer (:vec2 stx)             
     (syntax-parse stx                                        
@@ -80,10 +78,8 @@ Examples:
 > (bind ([v :vec2 #(3 4)])                                   
         (displayln                                           
          (~a "The vector " v " has entries " v0 " and " v1)))
-```                                                          
+                                                          
 The vector #(3 4) has entries 3 and 4                        
-                                                             
-```                                                          
 ```
 
 ## 1.2. Binding Clause Transformers
@@ -98,7 +94,7 @@ following bindings are in place: References to `id` expand to
 `(``force`` ``id``)`. Applictions `(``id`` ``arg`` ``...``)` expand to
 `(``(``force`` ``id``)`` ``arg`` ``...``)`.
 
-```racket
+
 Examples:                                       
 ```racket                                       
 > (bind ([x :delay (/ 1 0)]) 3)                 
@@ -108,7 +104,7 @@ Examples:
 > (bind ([x :delay (/ 1 0)]) (set! x 4) (+ x x))
 8                                               
 ```                                             
-```
+
 
 ```racket
 [(id ...) :same e]
@@ -121,12 +117,11 @@ The binding clause
 will evaluate the expression `e`and bind the result value to the
 identifiers \#racket[\_id ...].
 
-```racket
+
 Example:                             
 ```racket                            
 > (bind ([(x y) :same 1]) (list x y))
 '(1 1)                               
-```                                  
 ```
 
 ```racket
@@ -151,7 +146,6 @@ The binding clause
 will match the pattern `pat` against the result of the expression `e`.
 All identifiers `id`` ``...` must appear in the pattern.
 
-```racket
 Examples:                                          
 ```racket                                          
 > (bind ([x :match (list x _) '(2 3)]) x)          
@@ -161,7 +155,6 @@ Examples:
 > (bind ([x :match (list _ _) '(2 3)]) x)          
 x: undefined;                                      
  cannot reference undefined identifier             
-```                                                
 ```
 
 ```racket
@@ -175,13 +168,12 @@ The binding clause
 will evaluate the expression `e` and bind the real part to `x` and the
 imaginary part to `y` in the body of the bind expression.
 
-```racket
 Example:                                        
 ```racket                                       
 > (bind ([(x y) :complex (sqrt -4)]) (list x y))
 '(0 2)                                          
 ```                                             
-```
+
 
 ```racket
 [id :vector n e]
@@ -196,14 +188,11 @@ the `n` identifiers `d0`` ``,``id1`` ``,``...` will in the body of
 `bind` expand to `(``vector-ref`` ``id`` ``i``)`. Also `(``set!``
 ``idi`` ``e``)` will expand to `(``vector-set!`` ``v`` ``i`` ``e``)`.
 
-```racket
-Example:                            
-```racket                           
+
+Example:                                                     
 ```racket                           
 > (bind ([v :vector 2 (vector 3 4)])
         (set! v1 5)                 
-        (+ v0 v1))                  
-```                                 
-8                                   
-```                                 
+        (+ v0 v1))                                                  
+8                                                                 
 ```
