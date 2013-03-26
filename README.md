@@ -1,3 +1,5 @@
+Link to: [Scribble documentation](http://htmlpreview.github.com/?https://github.com/soegaard/bind/blob/master/scribblings/bind.html) 
+
 Bind: One construct to bind them all
 
     1 Bind: A Local binding construct
@@ -71,8 +73,6 @@ examples are in order before the more formal specification:
 
 ```racket
 Examples:                                                                  
-```racket                                                                  
-```racket                                                                  
 > (define fish%                                                            
     (class object% (init size)                                             
       (super-new)                                                          
@@ -92,8 +92,6 @@ Examples:
 
 ```racket
 Example:                                                       
-```racket                                                      
-```racket                                                      
 > (bind ([v :vector (for/vector ([i 5]) (random 10))])         
     (displayln (~a "The vector " v " contains " v))            
     (displayln (~a "The first element is: " (v 0)))            
@@ -164,14 +162,12 @@ following bindings are in place: References to `id` expand to
 
 ```racket
 Examples:                                       
-```racket                                       
 > (bind ([x :delay (/ 1 0)]) 3)                 
 3                                               
 > (bind ([x :delay 3]) (+ x x))                 
 6                                               
 > (bind ([x :delay (/ 1 0)]) (set! x 4) (+ x x))
 8                                               
-```                                             
 ```
 
 ```racket
@@ -190,8 +186,6 @@ will expand to
 
 ```racket
 Examples:                                                                  
-```racket                                                                  
-```racket                                                                  
 > (define fish%                                                            
     (class object% (init size)                                             
       (super-new)                                                          
@@ -231,8 +225,6 @@ body of the bind expression:
 
 ```racket
 Example:                          
-```racket                         
-```racket                         
 > (bind ([v :vector (vector 3 4)])
         (v! 1 5)                  
         (+ (v 0) (v 1)))          
@@ -264,8 +256,6 @@ body of the bind expression:
 
 ```racket
 Example:                           
-```racket                          
-```racket                          
 > (bind ([s :string "foobar"])     
     (~a (s 3 6) (s 0) (s 1) (s 2)))
 ```                                
@@ -286,7 +276,6 @@ identifiers \#racket[\_id ...].
 
 ```racket
 Example:                             
-```racket                            
 > (bind ([(x y) :same 1]) (list x y))
 '(1 1)                               
 ```                                  
@@ -316,7 +305,6 @@ All identifiers `id`` ``...` must appear in the pattern.
 
 ```racket
 Examples:                                          
-```racket                                          
 > (bind ([x :match (list x _) '(2 3)]) x)          
 2                                                  
 > (bind ([(x y) :match (list x y) '(2 3)]) (+ x y))
@@ -337,7 +325,6 @@ imaginary part to `y` in the body of the bind expression.
 
 ```racket
 Example:                                        
-```racket                                       
 > (bind ([(x y) :complex (sqrt -4)]) (list x y))
 '(0 2)                                          
 ```                                             
@@ -359,8 +346,6 @@ body of `bind` expand to `(``vector-ref`` ``id`` ``i``)`. Also
 
 ```racket
 Example:                                
-```racket                               
-```racket                               
 > (bind ([v :vector/idx 2 (vector 3 4)])
         (set! v1 5)                     
         (+ v0 v1))                      
@@ -394,10 +379,8 @@ solution is to define a binding clause transformer `vec2`.
 
 ```racket
 Examples:                                                    
-```racket                                                    
 > (require (for-syntax syntax/parse racket/syntax))          
                                                              
-```racket                                                    
 > (define-binding-clause-transformer (:vec2 stx)             
     (syntax-parse stx                                        
       [(id:id _ expr)                                        
@@ -414,7 +397,6 @@ Examples:
           (list)))]))                                        
 ```                                                          
                                                              
-```racket                                                    
 > (bind ([v :vec2 #(3 4)])                                   
         (displayln                                           
          (~a "The vector " v " has entries " v0 " and " v1)))
@@ -427,13 +409,11 @@ The vector #(3 4) has entries 3 and 4
 ## 1.5. Assignment transformers
 
 ```racket
-```racket           
 (make-transformer   
  #:context id       
  #:literals (id ...)
  [pat expr] ...)    
 ```                 
-```
 
 The standard construct `make-set!-transformer` used to create assignment
 transformers is a little cumbersome to use. The form `make-transformer`
