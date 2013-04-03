@@ -31,7 +31,7 @@
                 [_ #'(error 'make-transformer) ]))))])))
 
 (define (bct-id->transformers bct-id-stx)
-  (define maybe-bct (syntax-local-value bct-id-stx #f))
+  (define maybe-bct (syntax-local-value bct-id-stx (λ()#f)))
   (unless (binding-clause-transformer? maybe-bct)
     (displayln bct-id-stx)
     (error 'bct-id->transformer
