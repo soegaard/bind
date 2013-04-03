@@ -1,7 +1,7 @@
 #lang racket
 (require "../private/bind.rkt"
          (for-syntax syntax/parse))
-(provide (for-syntax :delay))
+(provide :delay)
 
 ; Semantics:
 ;   The binding clause

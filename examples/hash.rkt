@@ -4,7 +4,7 @@
                      racket/syntax
                      racket/stream))
 
-(provide (for-syntax :hash))
+(provide :hash)
 
 (define-binding-clause-transformer (:hash stx)
   (syntax-parse stx

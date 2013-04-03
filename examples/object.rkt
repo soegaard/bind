@@ -2,7 +2,7 @@
 (require "../private/bind.rkt"
          (for-syntax syntax/parse
                      racket/syntax))
-(provide (for-syntax :object))
+(provide :object)
 
 ; Semantics:
 ;   The binding clause

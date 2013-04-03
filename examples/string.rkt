@@ -3,7 +3,7 @@
          racket/syntax
          (for-syntax syntax/parse
                      racket/syntax))
-(provide (for-syntax :string :string/idx :str))
+(provide :string :string/idx :str)
 
 ; The following string functions matches Python:
 ;  http://docs.python.org/2/library/stdtypes.html
@@ -263,7 +263,7 @@
                   #:context so #:literals (set!)
                   [_:id  (syntax/loc so (string-alpha? v))])])))]))
 
-(define-for-syntax :str :string)
+(define-syntax :str (make-rename-transformer #':string))
 
 ; Semantics:
 ;   The binding clause
@@ -317,8 +317,8 @@
                   (set! s1 #\c)
                   (string s0 s1))
                 "ac")
-  (bind ([s :string "foobar"]
-         [f :string "foo"]
+  (bind ([s  :string "foobar"]
+         [f  :string "foo"]
          [ff :string "foofoo"]
          [t  :string "foo\tbar\t\newline"])
     (check-equal? (s 1) #\o)

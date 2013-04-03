@@ -2,7 +2,7 @@
 
 (require "../private/bind.rkt"
          (for-syntax syntax/parse))
-(provide (for-syntax :match))
+(provide :match)
 
 ; Semantics:
 ;   The binding clause

@@ -2,7 +2,7 @@
 (require "../private/bind.rkt"
          racket/syntax
          (for-syntax syntax/parse racket/syntax))
-(provide (for-syntax :integer :int))
+(provide :integer :int)
 
 ; :int is shorthand for :integer
 
@@ -76,11 +76,11 @@
          (make-short #'i+1 #'(add1 i))
          (make-short #'i-1 #'(sub1 i)))))]))
 
-(define-for-syntax :int :integer)
+(define-syntax :int (make-rename-transformer #':integer))
 
 (module* test #f 
   (require rackunit)
-  (check-equal? (bind ([x :int 3]) (x! 4) x) 4)
+  (check-equal? (bind ([x :integer 3]) (x! 4) x) 4)
   (check-equal? (bind ([x :int 3]) x++) 4)
   (check-equal? (bind ([x :int 3]) x++ x) 4)
   (check-equal? (bind ([x :int 3]) (x+! 1) x) 4)
