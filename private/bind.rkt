@@ -1,5 +1,5 @@
 #lang racket
-(provide #%bind-clause bind def
+(provide #%bind-clause bind def with λ*
          define-binding-clause-transformer
          (struct-out binding-clause-transformer)
          (for-syntax make-transformer))
@@ -49,14 +49,28 @@
          (let-syntax #,stx-cs
            body ...)))]))
 
+(define-syntax (with stx)
+  (syntax-parse stx
+    [(_ ([id bct]) body ...+)
+     #'(bind ([id bct id]) body ...)]
+    [(_ ([id0 id ...+ bct]) body ...+)
+     #'(with ([id0 bct]) 
+         (with ([id ... bct]) body ...))]
+    [(_ (clause0 clause ...+) body ...+)
+     #'(with (clause0)
+         (with (clause ...)
+           body ...))]))
+
 (define-syntax (def stx)
   (syntax-parse stx
     [(_ name:id e:expr)
      (syntax/loc stx
-       (define name expr))]
+       (begin 
+         (define name e) 
+         (void)))]
     [(_ (name:id ...) e:expr)
      (syntax/loc stx
-       (define-values (name ...) expr))]
+       (define-values (name ...) e))]
     [(_ name:id bct:id . more)
      (define-values (cs stx-cs) (expand-clauses #'([name bct . more])))
      (with-syntax ([((id e) ...) cs]
@@ -73,3 +87,11 @@
        (begin
          (define-values id e) ...
          (define-syntax stx-id stx-e) ...)))]))
+
+(define-syntax (λ* stx)
+  (syntax-parse stx
+    [(_ ((~seq n:id bct:id) ...) body ...+)
+     (syntax/loc stx
+       (λ (n ...)
+         (with ([n bct] ...)
+           body ...)))]))
