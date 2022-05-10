@@ -7,7 +7,7 @@
 (provide :hash)
 
 (define-binding-clause-transformer (:hash stx)
-  (syntax-parse stx
+  (syntax-parse stx    
     [(id*:id _ e*:expr)
      (define (make-id format-str) (format-id #'id* format-str #'id*))
      (with-syntax ([id   (generate-temporary #'id*)])
@@ -26,6 +26,5 @@
    (def h :hash (hash 'a 1 'b 2))
    (check-equal? (h 'a) 1)
    (check-equal? (h 'c 'not-found) 'not-found)))
-   
-  
+
 

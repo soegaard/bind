@@ -3,3 +3,8 @@
 
 (struct binding-clause-transformer 
     (name transformer))
+
+(struct binding-clause-conventions
+  (get-procedures get-rules) #:transparent)
+
+  

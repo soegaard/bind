@@ -19,9 +19,14 @@
       (define transformer (bct-id->transformers bct-id))
       (transformer clause-stx))
     (syntax-parse clause-stx
-      [(id-or-ids bct e:expr ...+) (transform-clause #'bct)]
-      [(id:id expr:expr)           (transform-clause #'#%bind-clause)]
-      [((id:id ...) expr:expr)     (transform-clause #'#%bind-clause)]
+      [(id-or-ids bct e:expr ...+)
+       (transform-clause #'bct)]
+      [(id:id expr:expr)
+       (set! clause-stx #'(id #%bind-clause expr))
+       (transform-clause #'#%bind-clause)]
+      [((id:id ...) expr:expr)
+       (set! clause-stx #'((id ...) #%bind-clause expr))
+       (transform-clause #'#%bind-clause)]
       [_ (displayln clause-stx)
        (define msg (~a "bad syntax one [id maybe-bct expr], "
                        "[(id ...) maybe-bct expr] expected, got: "
@@ -63,16 +68,13 @@
 
 (define-syntax (def stx)
   (syntax-parse stx
-    [(_ name:id e:expr)
-     (syntax/loc stx
-       (begin 
-         (define name e) 
-         (void)))]
-    [(_ (name:id ...) e:expr)
-     (syntax/loc stx
-       (define-values (name ...) e))]
-    [(_ name:id bct:id . more)
-     (define-values (cs stx-cs) (expand-clauses #'([name bct . more])))
+    [(_  name:id      e:expr)        (syntax/loc stx (def (name)     #%bind-clause e))]
+    [(_ (name:id ...) e:expr)        (syntax/loc stx (def (name ...) #%bind-clause e))]
+    [(_  name:id      bct:id . more) (syntax/loc stx (def (name) bct . more))]
+    ; Special case the case where one identifier is bound.
+    ; Then transformers doesn't need to handle id vs (id). 
+    [(_ (name:id)     bct:id . more)
+     (define-values (cs stx-cs) (expand-clauses #'([name bct (let () . more)])))
      (with-syntax ([((id e) ...) cs]
                    [((stx-id stx-e) ...) stx-cs])
      (syntax/loc stx
@@ -80,7 +82,7 @@
          (define-values id e) ...
          (define-syntax stx-id stx-e) ...)))]
     [(_ (name:id ...) bct:id . more)
-     (define-values (cs stx-cs) (expand-clauses #'([(name ...) bct . more])))
+     (define-values (cs stx-cs) (expand-clauses #'([(name ...) bct (let () . more)])))
      (with-syntax ([((id e) ...) cs]
                    [((stx-id stx-e) ...) stx-cs])
      (syntax/loc stx

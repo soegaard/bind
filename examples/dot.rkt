@@ -1,6 +1,10 @@
 #lang racket
 (require "../private/bind.rkt"
-         (for-syntax syntax/parse))
+         (for-syntax syntax/parse
+                     racket/base
+                     racket/syntax
+                     racket/format))
+
 
 ; Semantics:
 ;   The binding clause
